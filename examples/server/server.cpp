@@ -40,6 +40,12 @@ struct bark_params {
 
     int32_t seed = 0;
     server_params sparams;
+
+#ifdef GGML_USE_METAL
+    int n_gpu_layers = 99;
+#else
+    int n_gpu_layers = 0;
+#endif
 };
 
 void bark_print_usage(char **argv, const bark_params &params) {
@@ -65,6 +71,8 @@ void bark_params_parse(int argc, char **argv, bark_params &params) {
             model_req = true;
         } else if (arg == "-t" || arg == "--thread") {
             params.n_threads = std::stoi(argv[++i]);
+        } else if (arg == "-ngl") {
+            params.n_gpu_layers = std::stoi(argv[++i]);
         } else if (arg == "-p" || arg == "--port") {
             params.sparams.port = std::stoi(argv[++i]);
         } else if (arg == "-a" || arg == "--address") {
@@ -93,8 +101,10 @@ int main(int argc, char **argv) {
 
     bark_params_parse(argc, argv, params);
 
-    struct bark_context *bctx = bark_load_model(params.model_path.c_str(), bark_verbosity_level::LOW);
-    if (!bctx) {
+    struct bark_context *bctx = new bark_context();
+    bctx->n_gpu_layers = params.n_gpu_layers;
+
+    if (!bark_load_model(params.model_path.c_str(), bctx, bark_verbosity_level::LOW)) {
         fprintf(stderr, "%s: Could not load model\n", __func__);
         return 1;
     }

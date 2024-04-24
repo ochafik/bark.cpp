@@ -18,6 +18,23 @@
             "args": [],
             "cwd": "${fileDirname}",
             "preLaunchTask": "build test gpt eval",
-        }
+        },
+        {
+            "name": "(lldb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            // rm -fR build && cmake -B build . -DGGML_METAL=1 -DGGML_DEBUG=1 -DCMAKE_BUILD_TYPE=Debug && cmake --build build
+            "program": "${workspaceFolder}/build/examples/main/main",
+            "args": [
+                "-m", "./models/bark/ggml_weights.bin",
+                "-p", "I really love using llama.cpp and its ecosystem. They make me happy",
+                "-t", "4", "-o", "out2.wav", "-ngl", "99",
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb"
+        },
     ]
 }

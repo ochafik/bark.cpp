@@ -46,6 +46,8 @@ int bark_params_parse(int argc, char** argv, bark_params& params) {
 
         if (arg == "-t" || arg == "--threads") {
             params.n_threads = std::stoi(argv[++i]);
+        } else if (arg == "-ngl") {
+            params.n_gpu_layers = std::stoi(argv[++i]);
         } else if (arg == "-p" || arg == "--prompt") {
             params.prompt = argv[++i];
         } else if (arg == "-m" || arg == "--model_path") {

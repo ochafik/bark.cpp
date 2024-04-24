@@ -17,6 +17,12 @@ struct bark_params {
 
     // Seed for reproducibility in token sampling.
     int32_t seed = 0;
+
+#ifdef GGML_USE_METAL
+    int n_gpu_layers = 99;
+#else
+    int n_gpu_layers = 0;
+#endif
 };
 
 /**

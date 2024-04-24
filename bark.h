@@ -219,8 +219,9 @@ struct bark_context_params bark_context_default_params(void);
  * @param verbosity  The verbosity level when loading the model.
  * @return A pointer to the loaded bark model context.
  */
-struct bark_context *bark_load_model(
+bool bark_load_model(
     const std::string &model_path,
+    struct bark_context* bctx,
     bark_verbosity_level verbosity);
 
 /**

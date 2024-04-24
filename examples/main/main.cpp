@@ -31,8 +31,10 @@ int main(int argc, char **argv) {
               << "\n";
 
     // initialize bark context
-    struct bark_context *bctx = bark_load_model(params.model_path, verbosity);
-    if (!bctx) {
+    struct bark_context* bctx = new bark_context();
+    bctx->n_gpu_layers = params.n_gpu_layers;
+
+    if (!bark_load_model(params.model_path, bctx, verbosity)) {
         fprintf(stderr, "%s: Could not load model\n", __func__);
         exit(1);
     }

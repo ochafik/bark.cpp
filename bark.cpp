@@ -1070,15 +1070,17 @@ static bool bark_load_model_from_file(
     return true;
 }
 
-struct bark_context* bark_load_model(const std::string& model_path, bark_verbosity_level verbosity) {
+bool bark_load_model(
+    const std::string& model_path,
+    struct bark_context* bctx,
+    bark_verbosity_level verbosity)
+{
     int64_t t_load_start_us = ggml_time_us();
-
-    struct bark_context* bctx = new bark_context();
 
     bctx->text_model = bark_model();
     if (!bark_load_model_from_file(model_path, bctx, verbosity)) {
         fprintf(stderr, "%s: failed to load model weights from '%s'\n", __func__, model_path.c_str());
-        return nullptr;
+        return false;
     }
 
     bark_context_params params = bark_context_default_params();
@@ -1087,7 +1089,7 @@ struct bark_context* bark_load_model(const std::string& model_path, bark_verbosi
     bctx->params = params;
     bctx->t_load_us = ggml_time_us() - t_load_start_us;
 
-    return bctx;
+    return true;
 }
 
 static struct ggml_cgraph* bark_build_gpt_graph(
